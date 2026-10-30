@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Glenford George Boothe Memorial Scholarship</title>
+<title>Glenford Boothe Memorial Scholarship</title>
 <meta name="description" content="A memorial scholarship in honor of Glenford Boothe of Longwood, Jamaica, supporting students in need at Clarendon College.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -49,6 +49,16 @@ section h2{font-weight:800;font-size:clamp(2rem,5vw,3.2rem);margin-bottom:1.5rem
 section p+p{margin-top:1.1rem}
 .story{background:var(--green);color:var(--white)}
 .scholarship{background:var(--gold);color:var(--black)}
+.gallery{background:var(--black);color:var(--white)}
+.grid{display:grid;gap:2rem;grid-template-columns:repeat(2,1fr);margin-top:2rem}
+@media(min-width:48rem){.grid{grid-template-columns:repeat(3,1fr)}}
+.grid figure{margin:0}
+.frame{aspect-ratio:4/5;border:5px solid var(--gold);background:#111;display:grid;place-items:center;text-align:center;padding:1rem;color:#bbb;font-size:.95rem;overflow:hidden}
+.grid figure:nth-child(3n+1) .frame{border-color:var(--red)}
+.grid figure:nth-child(3n+2) .frame{border-color:var(--gold)}
+.grid figure:nth-child(3n) .frame{border-color:var(--green)}
+.frame img{width:100%;height:100%;object-fit:cover;display:block}
+.grid figcaption{margin-top:.6rem;font-size:1rem;color:#ddd}
 .memories{background:var(--red);color:var(--white)}
 .give{background:var(--black);color:var(--white)}
 
@@ -96,6 +106,18 @@ const LINKS = {
   memoryForm: "", // optional: a Google Form or similar link where people submit memories
   memoryEmail: "" // or an email address; used if memoryForm is empty
 };
+
+// PHOTOS: upload each image to the same repo, then put its exact filename in "src".
+// Add or remove lines in GALLERY to show more or fewer photo frames.
+const PORTRAIT = { src: "", alt: "Glenford Boothe" };   // main portrait at the top
+const GALLERY = [
+  { src: "", caption: "" },
+  { src: "", caption: "" },
+  { src: "", caption: "" },
+  { src: "", caption: "" },
+  { src: "", caption: "" },
+  { src: "", caption: "" }
+];
 </script>
 
 <header class="hero">
@@ -106,8 +128,8 @@ const LINKS = {
       <p class="lead">In loving memory of a son of Longwood, Jamaica. Every gift helps a student at Clarendon College reach for what comes next.</p>
       <a class="btn" href="#give">Give to the scholarship</a>
     </div>
-    <!-- EDIT HERE: replace the div's contents with <img src="portrait.jpg" alt="Glenford Boothe"> -->
-    <div class="portrait" role="img" aria-label="Portrait of Glenford Boothe">
+    <!-- Set PORTRAIT.src at the top of the file to show his main portrait -->
+    <div class="portrait" id="hero-portrait">
       Add Glenford’s portrait here
     </div>
   </div>
@@ -123,6 +145,16 @@ const LINKS = {
         <p>Replace this box with paragraphs about Glenford’s life: growing up in Longwood, his faith, his family, and the people he touched.</p>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="gallery" id="gallery">
+  <div class="wrap">
+    <h2>Remembering Glenford</h2>
+    <div class="prose">
+      <p>Moments with family, friends, and the community he loved.</p>
+    </div>
+    <div class="grid" id="gallery-grid"></div>
   </div>
 </section>
 
@@ -207,6 +239,35 @@ function wire(id, url, label){
     note.textContent = label + " link coming soon.";
   }
 }
+function photo(src, alt){
+  const img = document.createElement("img");
+  img.src = src; img.alt = alt; img.loading = "lazy";
+  return img;
+}
+if (PORTRAIT.src) {
+  const hero = document.getElementById("hero-portrait");
+  hero.textContent = "";
+  hero.appendChild(photo(PORTRAIT.src, PORTRAIT.alt));
+}
+const grid = document.getElementById("gallery-grid");
+GALLERY.forEach((item, i) => {
+  const fig = document.createElement("figure");
+  const frame = document.createElement("div");
+  frame.className = "frame";
+  if (item.src) {
+    frame.appendChild(photo(item.src, item.caption || "Photo " + (i + 1) + " of Glenford Boothe"));
+  } else {
+    frame.textContent = "Add photo " + (i + 1);
+  }
+  fig.appendChild(frame);
+  if (item.caption) {
+    const cap = document.createElement("figcaption");
+    cap.textContent = item.caption;
+    fig.appendChild(cap);
+  }
+  grid.appendChild(fig);
+});
+
 const memoryUrl = LINKS.memoryForm ||
   (LINKS.memoryEmail ? "mailto:" + LINKS.memoryEmail + "?subject=" + encodeURIComponent("A memory of Glenford Boothe") + "&body=" + encodeURIComponent("Your name and how you knew Glenford:\n\nYour memory:\n") : "");
 wire("memory", memoryUrl, "Memory submission");
