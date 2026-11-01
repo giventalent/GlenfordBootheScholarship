@@ -134,6 +134,26 @@ const GALLERY = [
     </div>
   </div>
 </header>
+  nav class="site-nav" aria-label="Main navigation">
+  <div class="wrap nav-wrap">
+    <a class="nav-brand" href="#top">Glenford Boothe</a>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="nav-links" id="nav-links">
+      <a href="#story">Story</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#scholarship">Scholarship</a>
+      <a href="#memories">Memories</a>
+      <a href="#give">Give</a>
+      <a href="#college">College</a>
+    </div>
+  </div>
+</nav>
 
 <section class="story" id="story">
   <div class="wrap">
@@ -273,6 +293,24 @@ const memoryUrl = LINKS.memoryForm ||
 wire("memory", memoryUrl, "Memory submission");
 wire("donate", LINKS.donate, "Donation");
 wire("college", LINKS.college, "Clarendon College");
+</script>
+  script>
+  const navToggle = document.querySelector(".nav-toggle");
+  const navLinks = document.querySelector(".nav-links");
+
+  if (navToggle && navLinks) {
+    navToggle.addEventListener("click", () => {
+      const isOpen = navLinks.classList.toggle("open");
+      navToggle.setAttribute("aria-expanded", String(isOpen));
+    });
+
+    navLinks.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        navLinks.classList.remove("open");
+        navToggle.setAttribute("aria-expanded", "false");
+      });
+    });
+  }
 </script>
 </body>
 </html>
